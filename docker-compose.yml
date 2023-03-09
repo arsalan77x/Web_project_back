@@ -1,0 +1,89 @@
+version: "3.2"
+services:
+
+  # back-end:
+  #   build: .
+  #   container_name: back
+  #   restart: always
+  #   volumes:
+  #     - ./public:/app/public
+  #     - ./logs:/app/logs
+  #   depends_on:
+  #     - db
+  #   environment:
+  #     - DATABASE_URL= mongodb://t4r4sht:t4r4shtt@db:27017/tarasht
+  #     - DB_NAME=tarasht
+  #     - DB_HOST=db
+  #     - DB_PORT=27017
+  #     - DB_USER=t4r4sht
+  #     - DB_PASS=t4r4shtt
+  #     - CONFIG_ID= 617822c0d4978297215a0043
+  #   networks:
+  #     - tarasht-network
+
+
+  # panel:
+  #   container_name: panel
+  #   image: 4lirez4/tarasht:panel
+  #   # ports:
+  #   #   - "3000:3000"
+  #   environment:
+  #     - DATABASE_URL= mongodb://db:27017/tarasht
+  #   networks:
+  #     - tarasht-network
+
+  # front-end:
+  #   container_name: front
+  #   image: 4lirez4/tarasht:front
+  #   # ports:
+  #   #   - "5000:5000"
+  #   environment:
+  #     - DATABASE_URL= mongodb://t4r4sht:t4r4shtt@db:27017/tarasht
+  #   networks:
+  #     - tarasht-network
+
+  db:
+    image: mongo
+    container_name: mongodb
+    volumes:
+      - ./addons/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+    ports:
+      - "27017:27017"
+    environment:
+      # MONGO_INITDB_DATABASE: tarasht
+      MONGO_INITDB_ROOT_USERNAME: t4r4sht
+      MONGO_INITDB_ROOT_PASSWORD: t4r4shtt
+    networks:
+      - tarasht-network
+  # mechdb:
+  #   image: mongo:4.4.4
+  #   container_name: mechmongo
+  #   volumes:
+  #     - ./mech/mongo:/data/db
+  #     - ./mech/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+  #   ports:
+  #     - "1717:27017"
+  #   environment:
+  #     MONGO_INITDB_DATABASE: mechanic
+  #     MONGO_INITDB_ROOT_USERNAME: m3c4n1c
+  #     MONGO_INITDB_ROOT_PASSWORD: cgUFN9Cj2rFDCiv2a5p6hVZ5yigW5QbG
+  #   networks:
+  #     - tarasht-network
+  # webserver:
+  #   image: nginx:1.18.0-alpine
+  #   container_name: webserver
+  #   restart: unless-stopped
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   volumes:
+  #     - ./nginx-conf:/etc/nginx/nginx.conf:ro
+  #       # - ./error.html:/usr/share/nginx/html/50x.html
+  #   depends_on:
+  #     - back-end
+  #   networks:
+  #     - tarasht-network
+
+networks:
+  tarasht-network:
+    driver: bridge  
