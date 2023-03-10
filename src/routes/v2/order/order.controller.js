@@ -42,7 +42,11 @@ module.exports = {
                 basketPriceCalc(req)
 
                 let sendPrice = 0
-  
+                if (req.body.deliver_type == "ارسال" && req.body.address?.latitude && req.body.address?.longitude)
+                    sendPrice = await sendPriceCalc(
+                        req.body.address.latitude,
+                        req.body.address.longitude,
+                    )
                 let finalPriceToPay = +req.priceAfter + +req.packprice + +sendPrice
                 const customer = await Customer.findById(req.body.customer_id)
                 let state = 'پرداخت حضوری'
@@ -108,7 +112,7 @@ module.exports = {
                 if (newData.is_print) {
                     newData = { ...newData, $inc: { print_time: +1 } }
                 }
-                console.log(newData)
+                //console.log(newData)
                 const order = await OrderRepo.update_one(id, newData)
                 new SuccessResponse('AllSuccess').send(res, order)
             } catch (error) {
@@ -139,7 +143,7 @@ module.exports = {
             try {
                 customer = await CustomerRepo.get_one(req.params.cid)
                 var address = await customer.address.filter(item => item._id == req.params.aid)[0]
-                console.log(address)
+                //console.log(address)
                 var sendPrice = 0
                 var response = { send_price: sendPrice }
                 new SuccessResponse('AllSuccess').send(res, response)

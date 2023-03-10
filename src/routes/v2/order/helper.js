@@ -117,7 +117,7 @@ async function getFactorNumberOfToday() {
     const config = await Config.findOne({_id: config_id})
     let dayOfDB = config.factor.today_date
     dayOfDB = new Date(dayOfDB)
-    dayOfDB.setHours(5, 0, 0, 0) // set 5 am to start of day
+    dayOfDB.setHours(5, 0, 0, 0) 
 
     let factor_number_db = config.factor.factor_number
     let factor_number
